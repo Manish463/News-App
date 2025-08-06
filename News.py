@@ -1,28 +1,42 @@
 import requests
-from My_key import key
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-url = "https://newsapi.org/v2/everything?language=en&q={}&from=2025-05-24&to=2025-05-23&sortBy=popularity&apiKey={}"
+key = os.getenv("key")
 
-print("Hello, friends this is a news app using this you can get some kind of news.")
+url = "https://newsapi.org/v2/everything?language=en&q={}&from=2025-07-06&sortBy=popularity&apikey={}"
+
+print("📰  Hello, friends! This is a News App. Get the latest news on your favorite topics. 📰\n")
 print("1 : Technology")
 print("2 : Health")
 print("3 : Science")
 print("4 : Sports")
 print("5 : Weather")
+print("6 : Others...")
 
-l = ["technology", "health", "science", "sports", "weather"]
-ind = int(input("enter your option: "))
+opt = int(input("Enter your option: "))
 
-if ind>5 or ind<0:
-    raise Exception("Invalid option.")
-kind = l[ind-1]
+if opt == 6:
+    kind = input("Enter the keyword for news: ")
 
+elif opt in [1, 2, 3, 4, 5]:
+    l = ["technology", "health", "science", "sports", "weather"]
+    if opt > 5 or opt < 0:
+        raise Exception("Invalid option.")
+    kind = l[opt-1]
+
+else:
+    print("Invalid option. Please try again.")
+
+print("\nFetching news, please wait...\n" + "-"*80)
 news = requests.get(url.format(kind, key)).json()
+
 article = news["articles"]
 
-print(f"\nTop 3 news of {kind}: \n")
+print(f"\nTop 10 news of {kind}: \n")
 
-for i in range(3):
+for i in range(10):
     print(f"Title: {article[i]["title"]}".center(180))
     print(f"News description: {article[i]["description"]}")
     print(f"News: {article[i]["content"]}")
